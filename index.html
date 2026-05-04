@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Click Rush</title>
+    <style>
+      body { font-family: Arial, sans-serif; display:flex; min-height:100vh; margin:0; align-items:center; justify-content:center; background:#111827; color:#f9fafb; }
+      .card { background:#1f2937; padding:24px; border-radius:12px; width:320px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,.35);} 
+      button { border:0; border-radius:10px; padding:12px 16px; cursor:pointer; font-size:16px; }
+      #startBtn { background:#10b981; color:white; width:100%; margin-bottom:12px; }
+      #clickBtn { background:#3b82f6; color:white; width:100%; margin-top:12px; display:none; }
+      .row { display:flex; justify-content:space-between; margin:8px 0; }
+      .muted { color:#9ca3af; font-size:13px; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Click Rush</h1>
+      <p class="muted">Click as many times as you can in 10 seconds.</p>
+      <button id="startBtn">Start Game</button>
+      <div class="row"><span>Time</span><strong id="time">10</strong></div>
+      <div class="row"><span>Score</span><strong id="score">0</strong></div>
+      <button id="clickBtn">Click me!</button>
+      <p id="message" class="muted"></p>
+    </div>
+
+    <script>
+      const startBtn = document.getElementById('startBtn');
+      const clickBtn = document.getElementById('clickBtn');
+      const timeEl = document.getElementById('time');
+      const scoreEl = document.getElementById('score');
+      const messageEl = document.getElementById('message');
+
+      let timeLeft = 10;
+      let score = 0;
+      let timer = null;
+      let playing = false;
+
+      function resetGame() {
+        timeLeft = 10;
+        score = 0;
+        timeEl.textContent = timeLeft;
+        scoreEl.textContent = score;
+        messageEl.textContent = '';
+      }
+
+      function endGame() {
+        playing = false;
+        clearInterval(timer);
+        clickBtn.style.display = 'none';
+        startBtn.disabled = false;
+        messageEl.textContent = `Time's up! Your score: ${score}`;
+      }
+
+      startBtn.addEventListener('click', () => {
+        if (playing) return;
+        resetGame();
+        playing = true;
+        startBtn.disabled = true;
+        clickBtn.style.display = 'block';
+
+        timer = setInterval(() => {
+          timeLeft -= 1;
+          timeEl.textContent = timeLeft;
+          if (timeLeft <= 0) endGame();
+        }, 1000);
+      });
+
+      clickBtn.addEventListener('click', () => {
+        if (!playing) return;
+        score += 1;
+        scoreEl.textContent = score;
+      });
+    </script>
+  </body>
+</html>
